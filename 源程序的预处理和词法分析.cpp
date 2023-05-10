@@ -1,21 +1,20 @@
-﻿#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+﻿#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-char s[100000];			//存储源程序文本内容 
-char p[100000];			//存储预处理后的源程序文本
-char t[100]; 			//存放暂时取得的单词符号 
-int lengths = 0;			//记录源程序文本的长度
-int lengthp = 0;			//存储预处理后的源程序文本的长度 
+char s[100000];	 // 存储源程序文本内容
+char p[100000];	 // 存储预处理后的源程序文本
+char t[100];	 // 存放暂时取得的单词符号
+int lengths = 0; // 记录源程序文本的长度
+int lengthp = 0; // 存储预处理后的源程序文本的长度
 int length = 0;
 
-void preprocessing(char s[], int lengths);//预处理子程序 
-void LexicalAnalysis(char p[], int lengthp);//词法分析程序 
-
+void preprocessing(char s[], int lengths);	 // 预处理子程序
+void LexicalAnalysis(char p[], int lengthp); // 词法分析程序
 
 int main()
 {
-	FILE* sf;			//指向源程序文本 
+	FILE *sf; // 指向源程序文本
 	char c;
 
 	if ((fopen_s(&sf, "C:\\Users\\王新涛\\Desktop\\编译原理实验报告\\实验1   源程序的预处理和词法分析程序设计\\source file.txt", "r")))
@@ -24,7 +23,7 @@ int main()
 		exit(0);
 	}
 
-	//将源程序文本内容存储到数组s中 
+	// 将源程序文本内容存储到数组s中
 	while ((c = fgetc(sf)) != EOF)
 	{
 		s[lengths] = c;
@@ -32,17 +31,17 @@ int main()
 	}
 	fclose(sf);
 
-	preprocessing(s, lengths);//预处理 
-	LexicalAnalysis(p, lengthp);//词法分析 
+	preprocessing(s, lengths);	 // 预处理
+	LexicalAnalysis(p, lengthp); // 词法分析
 
 	system("pause");
 	return 0;
 }
 
-//预处理子程序 
+// 预处理子程序
 void preprocessing(char s[], int lengths)
 {
-	FILE* pf;				//指向预处理后的源程序文本
+	FILE *pf; // 指向预处理后的源程序文本
 
 	if ((fopen_s(&pf, "C:\\Users\\王新涛\\Desktop\\编译原理实验报告\\实验1   源程序的预处理和词法分析程序设计\\preprocessing file.txt", "w")))
 	{
@@ -52,11 +51,11 @@ void preprocessing(char s[], int lengths)
 
 	for (int i = 0; i < lengths; i++)
 	{
-		//去掉源程序文本中的回车符、换行符、制表符 
+		// 去掉源程序文本中的回车符、换行符、制表符
 		if (s[i] == '\n' || s[i] == '\t')
 			continue;
 
-		//将源程序文本中的多个连续的空白符合并为一个 
+		// 将源程序文本中的多个连续的空白符合并为一个
 		if (s[i] == ' ')
 		{
 			p[lengthp] = s[i];
@@ -68,7 +67,7 @@ void preprocessing(char s[], int lengths)
 			continue;
 		}
 
-		//去掉单行注释 
+		// 去掉单行注释
 		if (s[i] == '/' && s[i + 1] == '/')
 		{
 			while (s[i] != '\n')
@@ -76,7 +75,7 @@ void preprocessing(char s[], int lengths)
 			continue;
 		}
 
-		//去掉多行注释
+		// 去掉多行注释
 		if (s[i] == '/' && s[i + 1] == '*')
 		{
 			i = i + 2;
@@ -106,11 +105,10 @@ void preprocessing(char s[], int lengths)
 	printf("Preprocessing Finished!\n\n");
 }
 
-
-//词法分析程序
+// 词法分析程序
 void LexicalAnalysis(char p[], int lengthp)
 {
-	FILE* bf;
+	FILE *bf;
 	int syn;
 
 	if ((fopen_s(&bf, "C:\\Users\\王新涛\\Desktop\\编译原理实验报告\\实验1   源程序的预处理和词法分析程序设计\\binary file.txt", "w")))
@@ -119,41 +117,75 @@ void LexicalAnalysis(char p[], int lengthp)
 		exit(0);
 	}
 
-	char const* keyword[26] = { "main","if","then","while","do","static","int","double","struct","break","else","long","switch","case","typedef","char","return","const","float","short","continue","for","void","sizeof","default","do" };
+	char const *keyword[26] = {"main", "if", "then", "while", "do", "static", "int", "double", "struct", "break", "else", "long", "switch", "case", "typedef", "char", "return", "const", "float", "short", "continue", "for", "void", "sizeof", "default", "do"};
 
 	for (int i = 0; i < lengthp; i++)
 	{
-		if (p[i] == '#')			syn = 0;
-		else if (p[i] == '+')		syn = 27;
-		else if (p[i] == '-')		syn = 28;
-		else if (p[i] == '/')		syn = 30;
-		else if (p[i] == '[')		syn = 39;
-		else if (p[i] == ']')		syn = 40;
-		else if (p[i] == ';')		syn = 41;
-		else if (p[i] == '(')		syn = 42;
-		else if (p[i] == ')')		syn = 43;
+		if (p[i] == '#')
+			syn = 0;
+		else if (p[i] == '+')
+			syn = 27;
+		else if (p[i] == '-')
+			syn = 28;
+		else if (p[i] == '/')
+			syn = 30;
+		else if (p[i] == '[')
+			syn = 39;
+		else if (p[i] == ']')
+			syn = 40;
+		else if (p[i] == ';')
+			syn = 41;
+		else if (p[i] == '(')
+			syn = 42;
+		else if (p[i] == ')')
+			syn = 43;
 		else if (p[i] == '*')
 		{
-			if (p[i + 1] == '*') { syn = 31; i++; }
-			else 				syn = 29;
+			if (p[i + 1] == '*')
+			{
+				syn = 31;
+				i++;
+			}
+			else
+				syn = 29;
 		}
 		else if (p[i] == '=')
 		{
-			if (p[i + 1] == '=') { syn = 32; i++; }
-			else 				syn = 38;
+			if (p[i + 1] == '=')
+			{
+				syn = 32;
+				i++;
+			}
+			else
+				syn = 38;
 		}
 		else if (p[i] == '>')
 		{
-			if (p[i + 1] == '=') { syn = 37; i++; }
-			else 				syn = 36;
+			if (p[i + 1] == '=')
+			{
+				syn = 37;
+				i++;
+			}
+			else
+				syn = 36;
 		}
 		else if (p[i] == '<')
 		{
-			if (p[i + 1] == '>') { syn = 34; i++; }
-			else if (p[i + 1] == '=') { syn = 35; i++; }
-			else 				  syn = 33;
+			if (p[i + 1] == '>')
+			{
+				syn = 34;
+				i++;
+			}
+			else if (p[i + 1] == '=')
+			{
+				syn = 35;
+				i++;
+			}
+			else
+				syn = 33;
 		}
-		else if (p[i] == ' ')	continue;
+		else if (p[i] == ' ')
+			continue;
 		else if ((p[i] >= 'a' && p[i] <= 'z') || (p[i] >= 'A' && p[i] <= 'Z'))
 		{
 			length = 0;
